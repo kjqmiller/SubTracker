@@ -16,7 +16,6 @@ percent_online = []
 
 # Open the desired CSV and append the data to the previous arrays for plotting, making sure not
 # to append the header rows as well.
-# TODO connect to S3 storage
 with open('/Users/samanthawillis/reddit_user_project/data/' + str(today) + '.csv') as file:
     reader = csv.reader(file)
     next(reader)
@@ -34,7 +33,7 @@ with open('/Users/samanthawillis/reddit_user_project/data/' + str(today) + '.csv
 
     #   Plot arrays for total/active sub counts
     plt.subplot(2, 1, 1)
-    plt.bar(time_x, online_y, label='Online Subs', color='#318223')
+    plt.plot(time_x, online_y, label='Online Subs', color='#318223')
     plt.plot(time_x, subscribers_y, label='Total Subs', color='#d47a31')
     plt.xticks(rotation=90)
     plt.xlabel('UTC Time')
