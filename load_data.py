@@ -7,7 +7,6 @@ import os.path
 def load_data(main_updated_dict):
     # Stage data as CSV
     df = pd.DataFrame([main_updated_dict])
-    # TODO set up s3 storage for staging and daily CSV files
     staging_csv_path = '/Users/samanthawillis/reddit_user_project/staging_data/staging.csv'
     df.to_csv(staging_csv_path)
 
