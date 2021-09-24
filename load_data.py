@@ -1,12 +1,12 @@
 import csv
 import boto3
-import botocore.exceptions
 import pandas as pd
-from datetime import date
-import os.path
+from datetime import datetime
+import botocore.exceptions
 
 
-# Get dictionary from previous function
+# Get dictionary from previous function and convert to DataFrame. Then convert DF into CSV and either append to current
+# day's CSV file, or create a new one for the first read of the day.
 def load_data(main_updated_dict):
     # Connect to s3
     s3 = boto3.resource('s3')
@@ -27,12 +27,12 @@ def load_data(main_updated_dict):
     s3_client.download_file(bucket, staged_csv_path, staged_csv_name)
 
     # Arguments
-    today_date = str(date.today())
+    today_date = str(datetime.utcnow().date())
     today_csv_path = ('data/' + today_date + '.csv')
     today_csv_name = (today_date + '.csv')
     s3_data_path = ('data/' + today_date + '.csv')
-    # Try to download csv with current date from s3 and append staging.csv, if it fails create new one and append
     # TODO get index to increment, currently all 0
+    # Try to download csv with current date from s3 and append staging.csv, if it fails create new one and append
     try:
         s3_client.download_file(bucket, today_csv_path, today_csv_name)
         with open(staged_csv_name, 'r') as staged:  # Open staged.csv, skip the header, then read the remaining

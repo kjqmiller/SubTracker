@@ -1,10 +1,14 @@
 import matplotlib.pyplot as plt
 import csv
 import datetime
+import boto3
+
+
+s3 = boto3.resource('s3')
 
 # Get the date for today and previous day
 # TODO add loop to run through all previous files when plotting
-today = datetime.date.today()
+today = datetime.datetime.utcnow().date()
 yesterday = today - datetime.timedelta(days=1)
 tomorrow = today + datetime.timedelta(days=1)
 
@@ -16,7 +20,9 @@ percent_online = []
 
 # Open the desired CSV and append the data to the previous arrays for plotting, making sure not
 # to append the header rows as well.
-with open('/Users/samanthawillis/reddit_user_project/data/' + str(today) + '.csv') as file:
+# TODO swapped commented out line for line below, does not work
+# with open('/Users/samanthawillis/reddit_user_project/data/' + str(today) + '.csv') as file:
+with open('s3://reddit-user-data/data/' + str(datetime.datetime.utcnow().date()) + '.csv') as file:
     reader = csv.reader(file)
     next(reader)
     for row in reader:
