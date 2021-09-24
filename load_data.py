@@ -15,7 +15,7 @@ def load_data(main_updated_dict):
     # Stage data as CSV in s3
     # In order to upload directly to s3, s3fs must be installed. s3fs builds upon botocore and fsspec.
     df = pd.DataFrame([main_updated_dict])
-    df.to_csv('s3://reddit-user-data/staging_data/staging.csv')
+    df.to_csv('s3://reddit-user-data/staging_data/staging.csv', index=False)
 
     # Function arguments
     bucket = 'reddit-user-data'
