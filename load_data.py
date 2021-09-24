@@ -31,7 +31,6 @@ def load_data(main_updated_dict):
     today_csv_path = ('data/' + today_date + '.csv')
     today_csv_name = (today_date + '.csv')
     s3_data_path = ('data/' + today_date + '.csv')
-    # TODO get index to increment, currently all 0
     # Try to download csv with current date from s3 and append staging.csv, if it fails create new one and append
     try:
         s3_client.download_file(bucket, today_csv_path, today_csv_name)
