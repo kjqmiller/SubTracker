@@ -24,6 +24,8 @@ I developed this project becuase I wanted to:
 
 ## Technologies
 * Python 3.9
+* AWS S3
+* AWS Lambda
 * Praw 7.4.0
 * Pandas 1.2.4
 * Numpy 1.21.2
@@ -75,19 +77,34 @@ Finally, we plot the data and open the charts in a new window for viewing.
 #### Disclaimer - A major lesson learned with the project was to better document the learning process. As I am making this README after finishing, I may have forgotten or otherwise made mistakes on some setup details. Hopefully though the following should work, or at least get you on the right path. 
 
 ### Setting up Reddit account and developer application
-To create a Reddit instance you will need to create a Reddit instance using praw. In order to do this you must have a Reddit account which, if you don't already have one, can be created [here](https://www.reddit.com/register/?dest=https%3A%2F%2Fwww.reddit.com%2F). After you have an account, follow the **First Steps** found [here](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example#first-steps) to set up your application and get your `client_id` and `client_secret`.
+You will need to create a Reddit instance using praw. In order to do this you must have a Reddit account which, if you don't already have one, can be created [here](https://www.reddit.com/register/?dest=https%3A%2F%2Fwww.reddit.com%2F). After you have an account, follow the **First Steps** found [here](https://github.com/reddit-archive/reddit/wiki/OAuth2-Quick-Start-Example#first-steps) to set up your application and get your `client_id` and `client_secret`.
 
 ### Setting up AWS account
-asdfasfdasdf
+* Get `.pem` file
+* Setting up roles, permissions, IAM, etc
 
 ### Setting up Lambda
-asdfasdfasdf
+* Runtime ended up Python 3.7
+* Needed to add `/tmp/` to deployment
+* Set up to run `reddit.Handler()`
+* Printing to log groups
+
+### Setting up EventBridge
+* Running with CRON or interval
+* Connect to Lambda as a trigger
+
+### Setting up Cloudwatch
+* Set up log groups 
 
 ### Setting up S3
-asdfasdfasdf
+* Flat file system
 
-### Creating Deployment package
-asdfasdfasdf
+### Deploying Code
+* Creating deployment package
+* Terminal command to remove excess files
+* Making sure to download `linux_any` versions of dependencies with correct Python versions
+* Zipping files/folders and uploading to S3
+* Connecting Lambda to S3 deployment package location
 
 
 
