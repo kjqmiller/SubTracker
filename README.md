@@ -101,17 +101,17 @@ Allows the choice to plot data from yesterday, today, or a custom date using `ma
 * Ensure in Lambda you are using x86_64 architecture in your runtime.
 * You can find a list of dependencies with `pip3 install pipreqs` and running `pipreqs` in the directory of your Python scripts. This will generate a `requirements.txt` file in that folder.
 * Create a folder for your deployment package on your local machine to store your Python files and dependencies in.
-* All of your dependencies will have to be downloaded manually and have filenames ending in `x86_64.whl` or `none-any.whl`. They also need to be Python 3.7.
-* From the command line `cd` into your directory and compress each `.zip` file with the command `unzip filename.whl`. Once all files are uncompressed, use the command line again use `zip -r your_deployment_package_name.zip .` to zip up all of your files and dependencies.
+* All of your dependencies will have to be downloaded manually and have filenames ending in `x86_64.whl` or `none-any.whl`. They also need to be Python 3.7. These dependencies can be found by seaching [PyPi](https://pypi.org/) and navigating to *Download files*.
+* From the command line `cd` into your directory and uncompress each `.zip` file with the command `unzip filename.whl`. Once all files are uncompressed, in the command line use `zip -r your_deployment_package_name.zip .` to zip up all of your files and dependencies.
 * Upload your deployment package to the `zip_file` directory of your S3 bucket and when complete, navigate to your file and copy its URL.
 * Go back to your function navigate to *Code > Code source > Upload from > S3 location* and paste in the URL for your deployment package.
 
 ### Startup
 * Now that everything should be set up navigate back to EventBridge, select your rule, and click *Enable*.
-* The pipeline will run until the rule is selected and then disabled.
+* The pipeline will run until the rule is disabled.
 * Check that things are running smoothly by going back to Lambda and clicking *Monitor > View logs in CloudWatch*. The logs are where any error messages will be sent to. In the event you get an error, assuming it due to bad code or missing dependencies, you must fix the error locally and upload an updated deployment package to S3 following the same steps from above. 
 
-
-
-
+### Key Lessons Learned
+* Probably the most important lesson I learned throughout this project is to throughly document your successes and failures. Lots of hours were lost searching for a fix to something I broke, only becuase I could not remember how I got it to work in the first place. The same goes for ensuring I don't repeat application breaking mistakes once I've made them. Good documentation also helps reinforce learning and makes creating documentation for others much easier and more thorough.
+* The biggest challenge by far was figuring out how to deploy the project with AWS. The list goes on, but notable lessons were making sure dependencies are compatable with AWS, understanding the S3 file system, and creating a deployment package that would run.
 
