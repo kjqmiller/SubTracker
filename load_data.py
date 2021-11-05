@@ -4,8 +4,9 @@ import pandas as pd
 import botocore.exceptions
 from datetime import datetime
 
+
 """
-Get dictionary from previous function and convert to DataFrame. Then convert DF into CSV and either append to current
+Get dictionary from previous function and convert to DataFrame. Then convert DF into CSV and stage it in s3. Next, either append to current
 day's CSV file, or create a new one for the first read of the day. Finally, upload final product to s3.
 """
 def load_data(data_dict):
