@@ -4,14 +4,14 @@ This application was built to track, over time, the number of total and online s
 
 ## Table of Contents
 * [Why?](#why?)
-* Technologies 
-* Overview
+* [Technologies](#technologies) 
+* [Overview](#overview)
   * reddit.py
   * call_reddit_api.py
   * clean_and_organize_data.py
   * load_data.py
   * plot_data.py
-* Setup
+* [Setup](#setup)
 * Startup
 * [Key Lessons Learned](#key-lessons-learned) 
 
