@@ -1,14 +1,15 @@
 from datetime import datetime
 
-# Get current user and datetime information from Superstonk and format / add columns
-def update_dictionary(main_dict):
+
+# Use timestamp from data_dict to add date, time, and percent_online
+def update_dictionary(data_dict):
     try:
-        main_dict.update(
-            date=datetime.date(main_dict['timestamp']),
-            time=datetime.time(main_dict['timestamp']),
-            percent_online=round(((main_dict['online'] / main_dict['subscribers']) * 100), 2)
+        data_dict.update(
+            date=datetime.date(data_dict['timestamp']),
+            time=datetime.time(data_dict['timestamp']),
+            percent_online=round(((data_dict['online'] / data_dict['subscribers']) * 100), 2)
         )
         print('Dictionary update successful')
-        return main_dict
+        return data_dict
     except Exception:
         print('Dictionary update failed')
