@@ -13,7 +13,7 @@ This application was built to track, over time, the number of total and online s
   * plot_data.py
 * Setup
 * Startup
-* Key Lessons Learned 
+* [Key Lessons Learned](###key-lessons-learned) 
 
 ## Why?
 I developed this project becuase I wanted to:
