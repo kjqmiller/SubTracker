@@ -1,7 +1,7 @@
 # SubTracker - online/total subreddit user tracker
 ## Introduction
 This application was built to track, over time, the number of total and online subscribers for a chosen subreddit. AWS EventBridge triggers are sent to AWS Lambda, which then runs scripts to pull data from the Reddit API using PRAW. The data is then staged in AWS S3, transformed in Lambda, and finally loaded back into another S3 bucket for storage.
-![Project Diagram](https://drive.google.com/uc?export=view&id=1OiLP-s0g3Jnr5zVPIIyGrcGtgeYuGaLK/)
+![Project Diagram](https://drive.google.com/uc?export=view&id=1OiLP-s0g3Jnr5zVPIIyGrcGtgeYuGaLK)
 
 ## Table of Contents
 * [Why?](#why?)
