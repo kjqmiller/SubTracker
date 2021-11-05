@@ -12,7 +12,7 @@ This application was built to track, over time, the number of total and online s
   * load_data.py
   * plot_data.py
 * [Setup](#setup)
-* Startup
+* [Startup](#startup)
 * [Key Lessons Learned](#key-lessons-learned) 
 
 ## Why?
