@@ -7,7 +7,7 @@ This application was built to track, over time, the number of total and online s
 * [Why?](#why?)
 * [Technologies](#technologies) 
 * [Overview](#overview)
-  * reddit.py
+  * main.py
   * call_reddit_api.py
   * clean_and_organize_data.py
   * load_data.py
@@ -37,8 +37,8 @@ I developed this project becuase I wanted to:
 * Botocore 1.20.106
 
 ## Overview
-### reddit.py
-`reddit.py` is the main file that completes the whole data pipeline by calling the functions defined in the included `.py` files. At the top of the file the  helper functions are imported from the other files, and they are called from within the `Handler()` function. `Handler()` is the function that AWS Lambda calls when it runs the deployment package containing our files and dependencies. `Handler()` accepts two arguments, `event` and `context`. These are Lambda specific but not relevant for this project, so they are both set equal to `None`. Before any of the helper functions are called we must choose which subreddit we would like to collect data for by setting `subreddit = 'chosen_subreddit'`, examples have been provided using subreddits that exist as of the current date (Nov-01-2021).
+### main.py
+`main.py` is the main file that completes the whole data pipeline by calling the functions defined in the included `.py` files. At the top of the file the  helper functions are imported from the other files, and they are called from within the `Handler()` function. `Handler()` is the function that AWS Lambda calls when it runs the deployment package containing our files and dependencies. `Handler()` accepts two arguments, `event` and `context`. These are Lambda specific but not relevant for this project, so they are both set equal to `None`. Before any of the helper functions are called we must choose which subreddit we would like to collect data for by setting `subreddit = 'chosen_subreddit'`, examples have been provided using subreddits that exist as of the current date (Nov-01-2021).
 
 ### call_reddit_api.py
 Here we extract the data we want from Reddit.
@@ -48,7 +48,8 @@ A Reddit instance is assigned to `reddit` using `praw.Reddit()` which accepts yo
 
 We then create an object for our chosen subreddit with `sub_data = reddit.subreddit()` and extract the data we need, followed by the creation of a timestamp. Once we have the data we want assigned to variables, we create an empty dictionary to contain all of our data in a single object. Using a for-loop we iterate through the keys we want the dictionary to have, and use the `locals()` function to assign the values from our local variables to the keys in our new dictionary.
 
-Finally, we return the newly created dictionary so that the next function in `reddit.py` can use it.
+Finally, we return the newly created dictionary so that the next function in `
+` can use it.
 
 In the event anything goes wrong, such as a failed API connection, the `try` block will fail and a notification will be printed via the `except` block to AWS CloudWatch logs, including the timestamp.
 
