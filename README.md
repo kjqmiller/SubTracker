@@ -3,7 +3,7 @@
 This application was built to track, over time, the number of total and online subscribers for a chosen subreddit. AWS EventBridge triggers are sent to AWS Lambda, which then runs scripts to pull data from the Reddit API using PRAW. The data is then staged in AWS S3, transformed in Lambda, and finally loaded back into another S3 bucket for storage.
 
 ## Table of Contents
-* [Why?](##-why?)
+* [Why?](#why?)
 * Technologies 
 * Overview
   * reddit.py
@@ -13,7 +13,7 @@ This application was built to track, over time, the number of total and online s
   * plot_data.py
 * Setup
 * Startup
-* [Key Lessons Learned](###key-lessons-learned) 
+* [Key Lessons Learned](#key-lessons-learned) 
 
 ## Why?
 I developed this project becuase I wanted to:
