@@ -1,65 +1,106 @@
-import matplotlib.pyplot as plt
 import csv
+import math
 import datetime
 import boto3
+import botocore.exceptions
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import numpy as np
 
-
-s3 = boto3.resource('s3')
-
-# Get the date for today and previous day
-# TODO add loop to run through all previous files when plotting
+"""
+Plot data for a chosen date, will open graphs in a new windown on your local machine. Currently this is the only
+script in the project that needs to be ran locally.
+"""
+# Choose a date that you'd like to plot the data for. Files stored in s3 are named with 'YYYY-MM-DD.csv' format
 today = datetime.datetime.utcnow().date()
 yesterday = today - datetime.timedelta(days=1)
-tomorrow = today + datetime.timedelta(days=1)
+custom_date = '2021-10-31'  # Format is 'YYYY-MM-DD'
 
 # Create arrays with values for x and y axes for each data sets
 online_y = []
 subscribers_y = []
-time_x = []
+time_object_x = []
 percent_online = []
 
-# Open the desired CSV and append the data to the previous arrays for plotting, making sure not
-# to append the header rows as well.
-# TODO swapped commented out line for line below, does not work
-# with open('/Users/samanthawillis/reddit_user_project/data/' + str(today) + '.csv') as file:
-with open('s3://reddit-user-data/data/' + str(datetime.datetime.utcnow().date()) + '.csv') as file:
-    reader = csv.reader(file)
-    next(reader)
-    for row in reader:
-        subscribers_y.append(int(row[0]))
-        online_y.append(int(row[1]))
-        # Remove trailing digits from seconds to make graph more readable
-        time = row[4]
-        time = time[:-10]
-        time_x.append(time)
-        percent_online.append(float(row[5]))
+# Connect to s3 and then open the desired CSV and append the data to the above arrays for plotting
+s3_client = boto3.client('s3')
+bucket = 'your_bucket'
+staged_csv_path = 'data_folder/' + str(yesterday) + '.csv'
+downloaded_csv_name = 'data.csv'
+try:
+    today_csv = s3_client.download_file(bucket, staged_csv_path, downloaded_csv_name)
+    with open('data.csv') as file:
+        reader = csv.reader(file)
+        next(reader)
+        for row in reader:
+            subscribers_y.append(int(row[0]))
+            online_y.append(int(row[1]))
+            timestamp = row[2]
+            time_object = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S.%f')
+            time_object_x.append(time_object)
+            percent_online.append(float(row[5]))
 
-    # Set size of window for plot
-    plt.figure(figsize=(10, 7.5))
+        # Set size of window for figure, set x-axis datetime format, and convert datetime object into numpy array
+        plt.figure(figsize=(14, 7.5))
+        xformatter = mdates.DateFormatter('%H:%M')
+        x = np.array(time_object_x)
 
-    #   Plot arrays for total/active sub counts
-    plt.subplot(2, 1, 1)
-    plt.plot(time_x, online_y, label='Online Subs', color='#318223')
-    plt.plot(time_x, subscribers_y, label='Total Subs', color='#d47a31')
-    plt.xticks(rotation=90)
-    plt.xlabel('UTC Time')
-    plt.ylabel('Total Subs vs Online Subs')
-    plt.title('Total vs Online Subs for ' + str(today))
-    plt.grid(axis='y')
-    plt.legend()
+        # Plot arrays for total/active sub counts
+        fig1 = plt.subplot(2, 2, 1)
+        fig1.xaxis.set_major_formatter(xformatter)
+        plt.plot(x, online_y, label='Online Subs', color='#318223')
+        plt.plot(x, subscribers_y, label='Total Subs', color='#d47a31')
+        plt.xticks(rotation=90)
+        plt.xlabel('UTC Time')
+        plt.ylabel('Total Subs vs Online Subs')
+        plt.title('Total vs Online Subs for ' + str(today))
+        plt.grid(axis='y')
+        plt.legend()
 
-    # Plot percentage online
-    labels = [str(i) for i in percent_online]
-    plt.subplot(2, 1, 2)
-    plt.plot(time_x, percent_online)
-    plt.ylim([0, 10])
-    plt.xticks(rotation=90)
-    plt.xlabel('UTC Time')
-    plt.ylabel('Percent Online')
-    plt.title('Percentage of Subscribers Currently Online for ' + str(today))
-    plt.grid(axis='y', color='k')
+        # Plot total subs
+        fig2 = plt.subplot(2, 2, 2)
+        fig2.xaxis.set_major_formatter(xformatter)
+        plt.plot(x, subscribers_y, label='Total Subs', color='#d47a31')
+        plt.xticks(rotation=90)
+        plt.xlabel('UTC Time')
+        plt.ylabel('Total Subs')
+        plt.title('Total Subs for ' + str(today))
+        plt.grid(axis='y')
+        plt.grid(axis='x')
+        plt.legend()
 
-    # Adjust subplot spacing to make axis labels easier to read
-    plt.subplots_adjust(left=0.2, bottom=0.2, right=None, top=None, wspace=None, hspace=1)
+        # Plot online subs
+        fig3 = plt.subplot(2, 2, 3)
+        fig3.xaxis.set_major_formatter(xformatter)
+        plt.plot(x, online_y, label='Online Subs', color='#318223')
+        plt.xticks(rotation=90)
+        plt.xlabel('UTC Time')
+        plt.ylabel('Online Subs')
+        plt.title('Online Subs for ' + str(today))
+        plt.grid(axis='y')
+        plt.legend()
 
-    plt.show()
+        # Plot percentage online
+        percent_high = math.ceil(max(percent_online))
+        percent_low = math.floor(min(percent_online))
+        labels = [str(i) for i in percent_online]
+        fig4 = plt.subplot(2, 2, 4)
+        fig4.xaxis.set_major_formatter(xformatter)
+        plt.plot(x, percent_online, label='Percent Online')
+        plt.ylim([percent_low, percent_high])
+        plt.xticks(rotation=90)
+        plt.xlabel('UTC Time')
+        plt.ylabel('Percent Online')
+        plt.title('Percentage of Subscribers Currently Online for ' + str(today))
+        plt.grid(axis='y', color='k')
+        plt.legend()
+
+        # Adjust subplot spacing to make axis labels easier to read
+        plt.subplots_adjust(left=0.2, bottom=0.2, right=None, top=None, wspace=None, hspace=1)
+
+        plt.tight_layout()
+        plt.show()
+
+except botocore.exceptions.ClientError as e:
+    if e.response['Error']['Code'] == "404":
+        print("CSV does not exist, try another date. Make sure the date is in the format 'YYYY-MM-DD'")
