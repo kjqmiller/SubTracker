@@ -1,6 +1,9 @@
 from datetime import datetime
 
 
+"""
+Takes existing dictionary and adds new columns by extracting only the date and time from timestamp, also adds a percent_online column.
+"""
 # Use timestamp from data_dict to add date, time, and percent_online
 def update_dictionary(data_dict):
     try:
