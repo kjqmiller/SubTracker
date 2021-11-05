@@ -77,7 +77,7 @@ Allows the choice to plot data from yesterday, today, or a custom date using `ma
 * You will need to set up an Amazon Web Services (AWS) account in order to use the services this application runs on (EventBridge, Lambda, CloudWatch, and Simple Storage Service (S3), which can be done [here](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/). 
 
 ### Setting up Lambda
-* Lambda runtime was set as Python 3.7 despite the app being written in 3.9 due to versioning issues while isntalling dependencies. 
+* Lambda runtime was set as Python 3.7 despite the app being written in 3.9 due to versioning issues while installing dependencies. 
 * When setting up runtime the *Handler* area is where you select which method for Lambda to invoke. It will be in the format `main_filename.method_name`. For example, if you have a file named `main.py` and a method called `do_something()`, you will enter `main.do_something` as your Handler.
 * Under *Lambda > Runtime Settings > Architecture* select x86_64.
 * A role will be needed for your Lambda function with several permissions to access the various services. To do this go to *Lambda > Functions > your_function > Configuration > Permissions > edit Execution Role*. From there you can create a new role with no template and a timeout set to 5 minutes, this is so you don't get a false timeout if the connection to the API is slow but working. Once you have a role you can add the permissions `AmazonS3FullAccess`, `AWSLambdaBasicExecutionRole`, and `CloudWatchLambdaInsightsExecutionRolePolicy`. These roles will allow read/write access to S3, allow Lambda function executions on your behalf, and grant access to Lambda Insights.
@@ -85,11 +85,11 @@ Allows the choice to plot data from yesterday, today, or a custom date using `ma
 
 ### Setting up EventBridge
 * Create trigger from Lambda by chosing *Create Rule*, then give it a name and an optional description.
-* Choose whether or not you want the trigger to be sent on a schedule based on interval (set intervals but no specific start times) or with a CRON expression (can specify both size of interval as well as start time). CRON expressions must be in the format `cron(* * * * ? *)` and include at least one `?`.
+* Choose whether you want the trigger to be sent on a schedule based on an interval (fixed intervals but no specific start times) or with a CRON expression (can specify both size of interval as well as exact times). CRON expressions must be in the format `cron(* * * * ? *)` and include at least one `?`.
 * Once you decide on a schedule you will set up a Target by choosing *Lambda function* and then lastly selecting `your_function` from the dropdown.
-* 
+
 ### Setting up Cloudwatch
-* If I recall, the Lambda function should automatically send logs to a log group.
+* The Lambda function should automatically create and send logs to a log group. These logs can be found under *function_name > Monitor > Logs > View logs in Cloudwatch*.
 
 ### Setting up S3
 * Before starting setup, one important thing to know is that S3 is a flat file system that uses objects and keys stored within buckets. Meaning all files are held in a single directory, as opposed to a hierarchical file system like what you'd find on a PC or Mac. As a result, the "folders" that you see in S3 are purly for human readability and the files in them are objects whose keys are the "path" to find them. You can read more about this [here](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-folders.html). Understanding this system and its naming conventions will save you a lot of time and headaches.
@@ -105,14 +105,14 @@ Allows the choice to plot data from yesterday, today, or a custom date using `ma
 * All of your dependencies will have to be downloaded manually and have filenames ending in `x86_64.whl` or `none-any.whl`. They also need to be Python 3.7. These dependencies can be found by seaching [PyPi](https://pypi.org/) and navigating to *Download files*.
 * From the command line `cd` into your directory and uncompress each `.zip` file with the command `unzip filename.whl`. Once all files are uncompressed, in the command line use `zip -r your_deployment_package_name.zip .` to zip up all of your files and dependencies.
 * Upload your deployment package to the `zip_file` directory of your S3 bucket and when complete, navigate to your file and copy its URL.
-* Go back to your function navigate to *Code > Code source > Upload from > S3 location* and paste in the URL for your deployment package.
+* Go back to your function and navigate to *Code > Code source > Upload from > S3 location*, then paste in the URL for your deployment package.
 
 ### Startup
 * Now that everything should be set up navigate back to EventBridge, select your rule, and click *Enable*.
 * The pipeline will run until the rule is disabled.
-* Check that things are running smoothly by going back to Lambda and clicking *Monitor > View logs in CloudWatch*. The logs are where any error messages will be sent to. In the event you get an error, assuming it due to bad code or missing dependencies, you must fix the error locally and upload an updated deployment package to S3 following the same steps from above. 
+* Check that things are running smoothly by going back to Lambda and clicking *Monitor > View logs in CloudWatch*. The logs are where any error messages will be sent to. In the event you get an error, you must fix the error locally and upload an updated deployment package to S3 following the same steps from above. 
 
 ### Key Lessons Learned
-* Probably the most important lesson I learned throughout this project is to throughly document your successes and failures. Lots of hours were lost searching for a fix to something I broke, only becuase I could not remember how I got it to work in the first place. The same goes for ensuring I don't repeat application breaking mistakes once I've made them. Good documentation also helps reinforce learning and makes creating documentation for others much easier and more thorough.
-* The biggest challenge by far was figuring out how to deploy the project with AWS. The list goes on, but notable lessons were making sure dependencies are compatable with AWS, understanding the S3 file system, and creating a deployment package that would run.
-
+* Probably the most important lesson I learned throughout this project is to throughly document your successes and failures. Lots of hours were lost searching for a fix to something I broke, only becuase I could not remember how I got it to work in the first place. The same goes for ensuring I don't repeat application breaking mistakes after making them. Good documentation also helps reinforce learning and makes creating documentation for other people much easier and more thorough.
+* The biggest challenge by far was figuring out how to deploy the project with AWS from a working local verison. The list goes on, but notable lessons were making sure dependencies are compatable with AWS, understanding the S3 file system, and creating a deployment package with the correct folder structure.
+* I also learned how powerful cloud computing can be, after getting the application to run successfuly on my local machine I quickly realized I could not collect data 24/7 consistantly. I encountered numerous challenges such as having a constant internet connection, potential power outages, and keeping the program running on my computer at all times. All of this was not practical and highlighted just how important it is to have a resiliant and scalable environment for your application. 
