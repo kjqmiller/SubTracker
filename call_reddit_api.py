@@ -1,7 +1,9 @@
 import praw
 from datetime import datetime
 
-
+"""
+Creates a Reddit instance using PRAW by connecting to the Reddit API and then generates a dictionary out of the data retrieved.
+"""
 def get_data(subreddit):
     try:
         # Create a read-only Reddit instance with praw
