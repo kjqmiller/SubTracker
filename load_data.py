@@ -49,7 +49,6 @@ def load_data(data_dict):
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == "404":
             print("Today's CSV does not exist. Creating a new one.")
-            # s3_client.upload_file(staged_csv_name, bucket, s3_data_path)  # Upload staged.csv as today.csv
             s3_client.upload_file(lambda_staged_csv_path, bucket, s3_data_path)  # Upload staged.csv as today.csv
         else:
             raise
